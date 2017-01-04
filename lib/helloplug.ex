@@ -15,7 +15,8 @@ end
 defmodule UserRouter do
   use Router
   def route("GET", ["users", user_id], conn) do
-    conn |> Plug.Conn.send_resp(200, "You reuquested user #{user_id}")
+    page_contents = EEx.eval_file("templates/show_user.eex", [user_id: user_id])
+    conn |> Plug.Conn.put_resp_content_type("text/html") |> Plug.Conn.send_resp(200, page_contents)
   end
   def route("POST", ["users"], conn) do
     # do some sort of database insertion here maybe
@@ -37,5 +38,4 @@ defmodule WebsiteRouter do
   def route(_method, _path, conn) do
     conn |> Plug.Conn.send_resp(404, "Couldn't find that page, sorry!")
   end
-
 end

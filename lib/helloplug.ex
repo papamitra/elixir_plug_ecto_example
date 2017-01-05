@@ -39,3 +39,19 @@ defmodule WebsiteRouter do
     conn |> Plug.Conn.send_resp(404, "Couldn't find that page, sorry!")
   end
 end
+
+defmodule Helloplug.Repo do
+  use Ecto.Repo,
+  otp_app: :helloplug,
+  adapter: Sqlite.Ecto
+end
+
+defmodule User do
+  use Ecto.Model
+
+  schema "users" do
+    field :first_name, :string
+    field :last_name, :string
+  end
+
+end

@@ -15,9 +15,14 @@ end
 defmodule UserRouter do
   use Router
   def route("GET", ["users", user_id], conn) do
-    page_contents = EEx.eval_file("templates/show_user.eex", [user_id: user_id])
-    conn |> Plug.Conn.put_resp_content_type("text/html") |> Plug.Conn.send_resp(200, page_contents)
+    case Helloplug.Repo.get(User, user_id) do
+      nil ->
+        conn |> Plug.Conn.send_resp(404, "User with that ID not found, sorry")
+      user ->
+        page_contents = EEx.eval_file("templates/show_user.eex", [user: user])
+        conn |> Plug.Conn.put_resp_content_type("text/html") |> Plug.Conn.send_resp(200, page_contents)     end
   end
+
   def route("POST", ["users"], conn) do
     # do some sort of database insertion here maybe
   end
@@ -52,6 +57,7 @@ defmodule User do
   schema "users" do
     field :first_name, :string
     field :last_name, :string
+    timestamps
   end
 
 end
